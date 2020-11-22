@@ -36,6 +36,7 @@ class Profile extends React.Component {
       if (profileJSON) {
         const repositories = await fetch(profileJSON.repos_url);
         const repositoriesJSON = await repositories.json();
+        console.log(repositoriesJSON);
 
         this.setState({
           data: profileJSON,
@@ -71,10 +72,16 @@ class Profile extends React.Component {
       { label: "bio", value: data.bio },
     ];
 
-    const projects = repositories.slice(0, 10).map(project => ({
-      label: project.name,
-      value: <Link url={project.html_url} title="Github URL" />,
-    }));
+    const projects = repositories.map(project => {
+      return {
+        label: project.homepage ? (
+          <Link url={project.homepage} title={project.name} />
+        ) : (
+          project.name
+        ),
+        value: <Link url={project.homepage} title="Github URL" />,
+      };
+    });
 
     return (
       <ProfileWrapper className="Profile-container">
